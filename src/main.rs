@@ -28,8 +28,11 @@ fn handle_request(mut stream: &TcpStream) -> String {
     return String::from_utf8_lossy(&v[..]).to_string();
 }
 
-fn request_to_path(req: String) -> String {
+fn request_to_path(mut req: String) -> String {
     let home = "example".to_string();
+    if !req.starts_with("/") {
+        req = "/".to_string() + &req;
+    }
     return home + &req;
 }
 
