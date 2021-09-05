@@ -2,6 +2,7 @@ use std::fs;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
+use std::path::Path;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:1866").unwrap();
@@ -34,8 +35,13 @@ fn request_to_path(req: String) -> String {
 
 fn send_response(mut stream: TcpStream, path: String) {
     let response;
-    let content = fs::read_to_string(path).unwrap();
-    response = format!("rydja1\tA\r\n{}", content);
+    if Path::new(&path).is_file() {
+        let content = fs::read_to_string(path).unwrap();
+        response = format!("rydja1\tA\r\n{}", content);
+    }
+    else {
+        response = "rydja1\tB\r\n".to_string();
+    }
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
 }
