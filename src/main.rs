@@ -4,18 +4,35 @@ use std::net::TcpListener;
 use std::net::TcpStream;
 use std::path::Path;
 
+enum ReqType {
+    PUSH,
+    PULL,
+    ERR,
+}
+
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:1866").unwrap();
+    let listener = TcpListener::bind("172.31.86.4:1866").unwrap();
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
-        let req = handle_request(&stream);
-        let path = request_to_path(req);
-        send_response(stream, path);
+        let (rpath, rtype) = handle_request(&stream);
+        match rtype {
+            ReqType::PULL => {
+                let path = rpath_to_filepath(rpath);
+                println!("Path: {}", path);
+                pull(stream, path);
+            },
+            ReqType::PUSH => {
+                push(stream);
+            },
+            _ => {
+                send_error_c(stream, rtype);
+            },
+        }
     }
 }
 
-fn handle_request(mut stream: &TcpStream) -> String {
+fn handle_request(mut stream: &TcpStream) -> (String, ReqType) {
     let mut buffer = [0; 512];
     stream.read(&mut buffer).unwrap();
     let mut v = vec![];
@@ -25,10 +42,18 @@ fn handle_request(mut stream: &TcpStream) -> String {
             _ => v.push(byte),
         }
     }
-    return String::from_utf8_lossy(&v[..]).to_string();
+    let req = String::from_utf8_lossy(&v[..]).to_string();
+    let rsplit = req.split("\t").collect::<Vec<&str>>();
+    let rpath = rsplit[1].to_string();
+    let rtype = match rsplit[0] {
+        "push" => ReqType::PUSH,
+        "pull" => ReqType::PULL,
+        _ => ReqType::ERR,
+    };
+    return (rpath, rtype);
 }
 
-fn request_to_path(mut req: String) -> String {
+fn rpath_to_filepath(mut req: String) -> String {
     let home = "example".to_string();
     if !req.starts_with("/") {
         req = "/".to_string() + &req;
@@ -36,7 +61,7 @@ fn request_to_path(mut req: String) -> String {
     return home + &req;
 }
 
-fn send_response(mut stream: TcpStream, path: String) {
+fn pull(mut stream: TcpStream, path: String) {
     let response;
     if Path::new(&path).is_file() {
         let content = fs::read_to_string(path).unwrap();
@@ -44,6 +69,24 @@ fn send_response(mut stream: TcpStream, path: String) {
     }
     else {
         response = "rydja1\tB\r\n".to_string();
+    }
+    stream.write(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
+}
+
+fn push(stream: TcpStream) {
+    send_error_c(stream, ReqType::PUSH);
+}
+
+fn send_error_c(mut stream: TcpStream, rtype: ReqType) {
+    let response;
+    match rtype {
+        ReqType::PUSH => {
+            response = "rydja1\tC\r\npush unsupported";
+        }
+        _ => {
+            response = "rydja1\tC\r\n";
+        }
     }
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
