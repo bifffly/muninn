@@ -44,12 +44,19 @@ fn handle_request(mut stream: &TcpStream) -> (String, ReqType) {
     }
     let req = String::from_utf8_lossy(&v[..]).to_string();
     let rsplit = req.split("\t").collect::<Vec<&str>>();
-    let rpath = rsplit[1].to_string();
-    let rtype = match rsplit[0] {
-        "push" => ReqType::PUSH,
-        "pull" => ReqType::PULL,
-        _ => ReqType::ERR,
-    };
+    let (rpath, rtype);
+    if rsplit.len() != 3 && rsplit[0].ne("rydja1") {
+        rpath = "".to_string();
+        rtype = ReqType::ERR;
+    }
+    else {
+        rpath = rsplit[2].to_string();
+        rtype = match rsplit[1] {
+            "push" => ReqType::PUSH,
+            "pull" => ReqType::PULL,
+            _ => ReqType::ERR,
+        };
+    }
     return (rpath, rtype);
 }
 
