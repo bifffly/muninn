@@ -3,12 +3,12 @@ use std::io::prelude::*;
 use std::net::TcpStream;
 use std::path::Path;
 
+#[derive(Debug, PartialEq)]
 pub enum ReqType {
     PUSH,
     PULL,
     ERR,
 }
-
 
 pub fn read_request(mut stream: &TcpStream) -> String {
     let mut buffer = [0; 512];
@@ -25,6 +25,9 @@ pub fn read_request(mut stream: &TcpStream) -> String {
 
 pub fn get_rtype(reqstr: &String) -> ReqType {
     let rsplit = reqstr.split("\t").collect::<Vec<&str>>();
+    if rsplit.len() != 3 {
+        return ReqType::ERR;
+    }
     let rtype = match rsplit[0] {
         "rydja1" => match rsplit[1] {
             "push" => ReqType::PUSH,
@@ -36,33 +39,35 @@ pub fn get_rtype(reqstr: &String) -> ReqType {
     return rtype;
 }
 
-pub fn get_filepath(reqstr: &String) -> String {
+pub fn get_filepath(reqstr: &String, homedir: &String) -> String {
     let rsplit = reqstr.split("\t").collect::<Vec<&str>>();
-    let home = "example".to_string();
-    if !rsplit[2].starts_with("/") {
-        rsplit[2].to_string().push_str("/");
+    let mut path = rsplit[2].to_string();
+    if !path.starts_with("/") {
+        path = "/".to_owned() + &path;
     }
-    return home + &rsplit[2];
+    return homedir.to_owned() + &path;
 }
 
-pub fn pull(mut stream: TcpStream, path: String) {
+pub fn pull(path: &String) -> String {
     let response;
-    if Path::new(&path).is_file() {
+    if Path::new(path).is_file() {
         let content = fs::read_to_string(path).unwrap();
         response = format!("rydja1\tA\r\n{}", content);
     }
     else {
         response = "rydja1\tB\r\nFile not found".to_string();
     }
-    stream.write(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
+    return response;
+
+    // stream.write(response.as_bytes()).unwrap();
+    // stream.flush().unwrap();
 }
 
-pub fn push(stream: TcpStream) {
-    send_error_c(stream, ReqType::PUSH);
+pub fn push() -> String {
+    return error_c(ReqType::PUSH);
 }
 
-pub fn send_error_c(mut stream: TcpStream, rtype: ReqType) {
+pub fn error_c(rtype: ReqType) -> String {
     let response;
     match rtype {
         ReqType::PUSH => {
@@ -72,12 +77,16 @@ pub fn send_error_c(mut stream: TcpStream, rtype: ReqType) {
             response = "rydja1\tC\r\n";
         }
     }
-    stream.write(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
+    return response.to_string(); 
+
+    // stream.write(response.as_bytes()).unwrap();
+    // stream.flush().unwrap();
 }
 
-pub fn send_error_d(mut stream: TcpStream) {
-    let response = "rydja1\tD\r\nInvalid request";
-    stream.write(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
+pub fn error_d() -> String {
+    let response = "rydja1\tD\r\nMalformed request";
+    return response.to_string();
+
+    // stream.write(response.as_bytes()).unwrap();
+    // stream.flush().unwrap();
 }
