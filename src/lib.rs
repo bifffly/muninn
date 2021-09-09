@@ -1,31 +1,16 @@
-use std::net::TcpListener;
-use rydja_server::*;
+use std::fs;
+use std::io::prelude::*;
+use std::net::TcpStream;
+use std::path::Path;
 
-fn main() {
-    let listener = TcpListener::bind("172.31.86.4:1866").unwrap();
-
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        let reqstr = read_request(&stream);
-        let rtype = get_rtype(&reqstr);
-        match rtype {
-            ReqType::PULL => {
-                let path = get_filepath(&reqstr);
-                println!("Path: {}", path);
-                pull(stream, path);
-            },
-            ReqType::PUSH => {
-                push(stream);
-            },
-            _ => {
-                send_error_d(stream);
-            },
-        }
-    }
+pub enum ReqType {
+    PUSH,
+    PULL,
+    ERR,
 }
 
-/*
-fn read_request(mut stream: &TcpStream) -> String {
+
+pub fn read_request(mut stream: &TcpStream) -> String {
     let mut buffer = [0; 512];
     stream.read(&mut buffer).unwrap();
     let mut v = vec![];
@@ -38,7 +23,7 @@ fn read_request(mut stream: &TcpStream) -> String {
     return String::from_utf8_lossy(&v[..]).to_string();
 }
 
-fn get_rtype(reqstr: &String) -> ReqType {
+pub fn get_rtype(reqstr: &String) -> ReqType {
     let rsplit = reqstr.split("\t").collect::<Vec<&str>>();
     let rtype = match rsplit[0] {
         "rydja1" => match rsplit[1] {
@@ -51,7 +36,7 @@ fn get_rtype(reqstr: &String) -> ReqType {
     return rtype;
 }
 
-fn get_filepath(reqstr: &String) -> String {
+pub fn get_filepath(reqstr: &String) -> String {
     let rsplit = reqstr.split("\t").collect::<Vec<&str>>();
     let home = "example".to_string();
     if !rsplit[2].starts_with("/") {
@@ -60,7 +45,7 @@ fn get_filepath(reqstr: &String) -> String {
     return home + &rsplit[2];
 }
 
-fn pull(mut stream: TcpStream, path: String) {
+pub fn pull(mut stream: TcpStream, path: String) {
     let response;
     if Path::new(&path).is_file() {
         let content = fs::read_to_string(path).unwrap();
@@ -73,11 +58,11 @@ fn pull(mut stream: TcpStream, path: String) {
     stream.flush().unwrap();
 }
 
-fn push(stream: TcpStream) {
+pub fn push(stream: TcpStream) {
     send_error_c(stream, ReqType::PUSH);
 }
 
-fn send_error_c(mut stream: TcpStream, rtype: ReqType) {
+pub fn send_error_c(mut stream: TcpStream, rtype: ReqType) {
     let response;
     match rtype {
         ReqType::PUSH => {
@@ -91,9 +76,8 @@ fn send_error_c(mut stream: TcpStream, rtype: ReqType) {
     stream.flush().unwrap();
 }
 
-fn send_error_d(mut stream: TcpStream) {
+pub fn send_error_d(mut stream: TcpStream) {
     let response = "rydja1\tD\r\nInvalid request";
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
 }
-*/
