@@ -1,7 +1,30 @@
+use serde::Deserialize;
 use std::fs;
 use std::io::prelude::*;
 use std::net::TcpStream;
 use std::path::Path;
+
+#[derive(Deserialize)]
+pub struct Config {
+    pub network: NetworkConfig,
+    pub server: ServerConfig
+}
+
+#[derive(Deserialize)]
+pub struct NetworkConfig {
+    pub ipaddr: String,
+    pub port: String
+}
+
+#[derive(Deserialize)]
+pub struct ServerConfig {
+    pub homedir: String
+}
+
+pub fn parse_config(confpath: &str) -> Config {
+    let confcontent = fs::read_to_string(confpath).unwrap();
+    return toml::from_str(&confcontent).unwrap();
+}
 
 #[derive(Debug, PartialEq)]
 pub enum ReqType {

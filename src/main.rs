@@ -1,10 +1,14 @@
 use std::io::prelude::*;
 use std::net::TcpListener;
+
 use muninn::*;
 
 fn main() {
-    let homedir = "example".to_string();
-    let connection = "172.31.18.51:1866";
+    let conf: Config = parse_config("config/HIDDEN.toml");
+    let homedir = conf.server.homedir;
+    let ipaddr = conf.network.ipaddr;
+    let port = conf.network.port;
+    let connection = ipaddr + ":" + &port;
 
     let listener = TcpListener::bind(connection).unwrap();
     for stream in listener.incoming() {

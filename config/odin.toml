@@ -1,0 +1,6 @@
+[network]
+ipaddr = "127.0.0.1"
+port = "1866"
+
+[server]
+homedir = "example"
