@@ -1,10 +1,10 @@
 use std::io::prelude::*;
 use std::net::TcpListener;
-use rydja_server::*;
+use muninn::*;
 
 fn main() {
     let homedir = "example".to_string();
-    let connection = "172.31.86.4:1866";
+    let connection = "172.31.18.51:1866";
 
     let listener = TcpListener::bind(connection).unwrap();
     for stream in listener.incoming() {

@@ -29,7 +29,7 @@ pub fn get_rtype(reqstr: &String) -> ReqType {
         return ReqType::ERR;
     }
     let rtype = match rsplit[0] {
-        "rydja1" => match rsplit[1] {
+        "odin" => match rsplit[1] {
             "push" => ReqType::PUSH,
             "pull" => ReqType::PULL,
             _ => ReqType::ERR,
@@ -52,10 +52,10 @@ pub fn pull(path: &String) -> String {
     let response;
     if Path::new(path).is_file() {
         let content = fs::read_to_string(path).unwrap();
-        response = format!("rydja1\tA\r\n{}", content);
+        response = format!("odin\tA\r\n{}", content);
     }
     else {
-        response = "rydja1\tB\r\nFile not found".to_string();
+        response = "odin\tB\r\nFile not found".to_string();
     }
     return response;
 
@@ -71,10 +71,10 @@ pub fn error_c(rtype: ReqType) -> String {
     let response;
     match rtype {
         ReqType::PUSH => {
-            response = "rydja1\tC\r\nRequest method \'push\' unsupported";
+            response = "odin\tC\r\nRequest method \'push\' unsupported";
         }
         _ => {
-            response = "rydja1\tC\r\n";
+            response = "odin\tC\r\n";
         }
     }
     return response.to_string(); 
@@ -84,7 +84,7 @@ pub fn error_c(rtype: ReqType) -> String {
 }
 
 pub fn error_d() -> String {
-    let response = "rydja1\tD\r\nMalformed request";
+    let response = "odin\tD\r\nMalformed request";
     return response.to_string();
 
     // stream.write(response.as_bytes()).unwrap();
