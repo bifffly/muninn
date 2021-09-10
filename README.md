@@ -1,6 +1,6 @@
-# rydja-server
+# muninn
 
-This is a basic implementation of a ryðja server in Rust. It is based loosely off of the HTTP server tutorial in the Rust documentation.
+This is a basic implementation of an Odin server in Rust. It is based loosely off of the HTTP server tutorial in the Rust documentation.
 
 ## Serving files
 
