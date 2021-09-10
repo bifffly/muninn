@@ -1,4 +1,4 @@
-@rydja(Home)
+@odin(Home)
 
 @head(This is a test homepage)
 

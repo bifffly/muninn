@@ -1,4 +1,4 @@
-@rydja(List test)
+@odin(List test)
 
 @head(This is a test of rydja's lists.)
 

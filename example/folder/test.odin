@@ -1,4 +1,4 @@
-@rydja(Folder test)
+@odin(Folder test)
 
 @head(Test)
 
