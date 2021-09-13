@@ -1,6 +1,6 @@
 @odin(List test)
 
-@head(This is a test of rydja's lists.)
+@head(This is a test of Odin's list functionality.)
 
 @blist
 Bullet 1

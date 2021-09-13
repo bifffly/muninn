@@ -4,7 +4,7 @@ use std::net::TcpListener;
 use muninn::*;
 
 fn main() {
-    let conf: Config = parse_config("config/odin.toml");
+    let conf: Config = parse_config("config/HIDDEN.toml");
     let homedir = conf.server.homedir;
     let ipaddr = conf.network.ipaddr;
     let port = conf.network.port;
@@ -14,6 +14,7 @@ fn main() {
     for stream in listener.incoming() {
         let mut stream = stream.unwrap();
         let reqstr = read_request(&stream);
+        println!("{}", reqstr);
         let rtype = get_rtype(&reqstr);
         let response: String = match rtype {
             ReqType::PULL => {
