@@ -4,7 +4,7 @@ use std::net::TcpListener;
 use muninn::*;
 
 fn main() {
-    let conf: Config = parse_config("config/HIDDEN.toml");
+    let conf: Config = parse_config("config/odin.toml");
     let homedir = conf.server.homedir;
     let ipaddr = conf.network.ipaddr;
     let port = conf.network.port;

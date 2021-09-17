@@ -1,0 +1,19 @@
+@odin List test
+@head This is a test of Odin's list functionality.
+
+@blist
+  @item Bullet 1
+  @item Bullet 2
+  @item Bullet 3
+@bunlist
+
+List off.
+
+@nlist
+  @item Number 1
+  @item Number 2
+  @item Number 3
+@nunlist
+
+List off.
+
