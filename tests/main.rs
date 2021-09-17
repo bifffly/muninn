@@ -4,21 +4,21 @@ use muninn::*;
 
 #[test]
 fn test_get_rtype_pull() {
-    let reqstr = "odin\tpull\t/home.ryd".to_string();
+    let reqstr = "odin\tpull\t/home.odin".to_string();
     let rtype = get_rtype(&reqstr);
     assert_eq!(rtype, ReqType::PULL);
 }
 
 #[test]
 fn test_get_rtype_push() {
-    let reqstr = "odin\tpush\t/home.ryd".to_string();
+    let reqstr = "odin\tpush\t/home.odin".to_string();
     let rtype = get_rtype(&reqstr);
     assert_eq!(rtype, ReqType::PUSH);
 }
 
 #[test]
 fn test_get_rtype_err_wellformed() {
-    let reqstr = "odin\terr\t/home.ryd".to_string();
+    let reqstr = "odin\terr\t/home.odin".to_string();
     let rtype = get_rtype(&reqstr);
     assert_eq!(rtype, ReqType::ERR);
 }
@@ -32,30 +32,30 @@ fn test_get_rtype_err_rsplit_len_mismatch() {
 
 #[test]
 fn test_get_rtype_err_verspec_mismatch() {
-    let reqstr = "freyja\tpush\t/home.ryd".to_string();
+    let reqstr = "freyja\tpush\t/home.odin".to_string();
     let rtype = get_rtype(&reqstr);
     assert_eq!(rtype, ReqType::ERR);
 }
 
 #[test]
 fn test_get_filepath() {
-    let reqstr = "odin\tpull\t/home.ryd".to_string();
+    let reqstr = "odin\tpull\t/home.odin".to_string();
     let homedir = "example".to_string();
     let filepath = get_filepath(&reqstr, &homedir);
-    assert_eq!(filepath, "example/home.ryd");
+    assert_eq!(filepath, "example/home.odin");
 }
 
 #[test]
 fn test_get_filepath_slash_normalization() {
-    let reqstr = "odin\tpull\thome.ryd".to_string();
+    let reqstr = "odin\tpull\thome.odin".to_string();
     let homedir = "example".to_string();
     let filepath = get_filepath(&reqstr, &homedir);
-    assert_eq!(filepath, "example/home.ryd");
+    assert_eq!(filepath, "example/home.odin");
 }
 
 #[test]
 fn test_pull_file_exists() {
-    let path = "example/home.ryd".to_string();
+    let path = "example/home.odin".to_string();
     let response = pull(&path);
     let content = fs::read_to_string(path).unwrap();
     let comp_response = format!("odin\tA\r\n{}", content);
@@ -64,7 +64,7 @@ fn test_pull_file_exists() {
 
 #[test]
 fn test_pull_file_does_not_exist() {
-    let path = "example/missing.ryd".to_string();
+    let path = "example/missing.odin".to_string();
     let response = pull(&path);
     assert_eq!(response, "odin\tB\r\nFile not found");
 }
