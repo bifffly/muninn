@@ -3,17 +3,17 @@ use std::fs;
 use muninn::*;
 
 #[test]
+fn test_get_rtype_preflight() {
+    let reqstr = "odin\tpreflight\t/home.odinml".to_string();
+    let rtype = get_rtype(&reqstr);
+    assert_eq!(rtype, ReqType::PREFLIGHT);
+}
+
+#[test]
 fn test_get_rtype_pull() {
     let reqstr = "odin\tpull\t/home.odinml".to_string();
     let rtype = get_rtype(&reqstr);
     assert_eq!(rtype, ReqType::PULL);
-}
-
-#[test]
-fn test_get_rtype_push() {
-    let reqstr = "odin\tpush\t/home.odinml".to_string();
-    let rtype = get_rtype(&reqstr);
-    assert_eq!(rtype, ReqType::PUSH);
 }
 
 #[test]
@@ -25,7 +25,7 @@ fn test_get_rtype_err_wellformed() {
 
 #[test]
 fn test_get_rtype_err_rsplit_len_mismatch() {
-    let reqstr = "malformed request".to_string();
+    let reqstr = "odin".to_string();
     let rtype = get_rtype(&reqstr);
     assert_eq!(rtype, ReqType::ERR);
 }
@@ -54,6 +54,22 @@ fn test_get_filepath_slash_normalization() {
 }
 
 #[test]
+fn test_preflight_file_exists() {
+    let path = "example/home.odinml".to_string();
+    let res = preflight(&path);
+    let len = fs::read(path).unwrap().len();
+    let comp_res = format!("odin\tA\t{}\r\n", len);
+    assert_eq!(res, comp_res);
+}
+
+#[test]
+fn test_preflight_file_does_not_exist() {
+    let path = "example/missing.odinml".to_string();
+    let res = preflight(&path);
+    assert_eq!(res, "odin\tB\r\n");
+}
+
+#[test]
 fn test_pull_file_exists() {
     let path = "example/home.odinml".to_string();
     let response = pull(&path);
@@ -66,30 +82,12 @@ fn test_pull_file_exists() {
 fn test_pull_file_does_not_exist() {
     let path = "example/missing.odinml".to_string();
     let response = pull(&path);
-    assert_eq!(response, "odin\tB\r\nFile not found");
-}
-
-#[test]
-fn test_push() {
-    let response = push();
-    assert_eq!(response, "odin\tC\r\nRequest method \'push\' unsupported");
+    assert_eq!(response, "odin\tB\r\n");
 }
 
 #[test]
 fn test_error_c() {
-    let response = error_c(ReqType::ERR);
+    let response = error_c();
     assert_eq!(response, "odin\tC\r\n");
-}
-
-#[test]
-fn test_error_c_push() {
-    let response = error_c(ReqType::PUSH);
-    assert_eq!(response, "odin\tC\r\nRequest method \'push\' unsupported");
-}
-
-#[test]
-fn test_error_d() {
-    let response = error_d();
-    assert_eq!(response, "odin\tD\r\nMalformed request");
 }
 
