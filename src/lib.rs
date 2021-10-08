@@ -86,22 +86,16 @@ pub fn preflight(path: &String) -> String {
 pub fn pull(path: &String) -> String {
     let res;
     if Path::new(path).is_file() {
-        let content = fs::read_to_string(path).unwrap();
-        res = format!("odin\tA\r\n{}", content);
+        res = fs::read_to_string(path).unwrap();
     }
     else {
-        res = "odin\tB\r\n".to_string();
+        res = String::new();
     }
     return res;
-
-    // stream.write(response.as_bytes()).unwrap();
-    // stream.flush().unwrap();
 }
 
 pub fn error_c() -> String {
     let res = "odin\tC\r\n";
     return res.to_string();
-
-    // stream.write(response.as_bytes()).unwrap();
-    // stream.flush().unwrap();
 }
+

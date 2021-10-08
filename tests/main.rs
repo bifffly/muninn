@@ -72,17 +72,16 @@ fn test_preflight_file_does_not_exist() {
 #[test]
 fn test_pull_file_exists() {
     let path = "example/home.odinml".to_string();
-    let response = pull(&path);
-    let content = fs::read_to_string(path).unwrap();
-    let comp_response = format!("odin\tA\r\n{}", content);
-    assert_eq!(response, comp_response);
+    let res = pull(&path);
+    let comp_res = fs::read_to_string(path).unwrap();
+    assert_eq!(res, comp_res);
 }
 
 #[test]
 fn test_pull_file_does_not_exist() {
     let path = "example/missing.odinml".to_string();
     let response = pull(&path);
-    assert_eq!(response, "odin\tB\r\n");
+    assert_eq!(response, String::new());
 }
 
 #[test]
