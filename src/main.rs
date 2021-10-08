@@ -17,12 +17,15 @@ fn main() {
         println!("{}", reqstr);
         let rtype = get_rtype(&reqstr);
         let response: String = match rtype {
+            ReqType::PREFLIGHT => {
+                let path = get_filepath(&reqstr, &homedir);
+                preflight(&path)
+            },
             ReqType::PULL => {
                 let path = get_filepath(&reqstr, &homedir);
                 pull(&path)
             },
-            ReqType::PUSH => push(),
-            _ => error_d(),
+            _ => error_c(),
         };
         stream.write(response.as_bytes()).unwrap();
         stream.flush().unwrap();

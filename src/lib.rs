@@ -28,7 +28,7 @@ pub fn parse_config(confpath: &str) -> Config {
 
 #[derive(Debug, PartialEq)]
 pub enum ReqType {
-    PUSH,
+    PREFLIGHT,
     PULL,
     ERR,
 }
@@ -53,7 +53,7 @@ pub fn get_rtype(reqstr: &String) -> ReqType {
     }
     let rtype = match rsplit[0] {
         "odin" => match rsplit[1] {
-            "push" => ReqType::PUSH,
+            "preflight" => ReqType::PREFLIGHT,
             "pull" => ReqType::PULL,
             _ => ReqType::ERR,
         },
@@ -71,44 +71,36 @@ pub fn get_filepath(reqstr: &String, homedir: &String) -> String {
     return homedir.to_owned() + &path;
 }
 
-pub fn pull(path: &String) -> String {
-    let response;
+pub fn preflight(path: &String) -> String {
+    let res;
     if Path::new(path).is_file() {
-        let content = fs::read_to_string(path).unwrap();
-        response = format!("odin\tA\r\n{}", content);
+        let len = fs::read(path).unwrap().len();
+        res = format!("odin\tA\t{}\r\n", len);
     }
     else {
-        response = "odin\tB\r\nFile not found".to_string();
+        res = "odin\tB\r\n".to_string();
     }
-    return response;
+    return res;
+}
+
+pub fn pull(path: &String) -> String {
+    let res;
+    if Path::new(path).is_file() {
+        let content = fs::read_to_string(path).unwrap();
+        res = format!("odin\tA\r\n{}", content);
+    }
+    else {
+        res = "odin\tB\r\n".to_string();
+    }
+    return res;
 
     // stream.write(response.as_bytes()).unwrap();
     // stream.flush().unwrap();
 }
 
-pub fn push() -> String {
-    return error_c(ReqType::PUSH);
-}
-
-pub fn error_c(rtype: ReqType) -> String {
-    let response;
-    match rtype {
-        ReqType::PUSH => {
-            response = "odin\tC\r\nRequest method \'push\' unsupported";
-        }
-        _ => {
-            response = "odin\tC\r\n";
-        }
-    }
-    return response.to_string(); 
-
-    // stream.write(response.as_bytes()).unwrap();
-    // stream.flush().unwrap();
-}
-
-pub fn error_d() -> String {
-    let response = "odin\tD\r\nMalformed request";
-    return response.to_string();
+pub fn error_c() -> String {
+    let res = "odin\tC\r\n";
+    return res.to_string();
 
     // stream.write(response.as_bytes()).unwrap();
     // stream.flush().unwrap();
