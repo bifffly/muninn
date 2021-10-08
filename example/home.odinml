@@ -1,12 +1,16 @@
-@odin Home
-@head This is a test homepage
-@hhead This is a test second-level header
-@hhhead This is a test third-level header
-This is a test plain line.
-@blist
-@item Test list
-@bunlist
-@nlist
-@item Test enumerated list
-@nunlist
-
+t	Home
+h1	This is a test homepage
+h2	This is a test second-level header
+h3	This is a test third-level header
+p	This is a test plain line.
+bl
+it	First bullet point
+it	Second buillet point
+unbl
+el
+it	First enumerated item
+it	Second enumerated item
+unel
+p	Example links:
+r	List test file	list.odinml	odin.odin-project.com
+r	Folder child test file	folder/test.odinml	odin.odin-project.com

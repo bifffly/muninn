@@ -1,4 +1,4 @@
-@odin Folder test
-@head Test
-This is a test of the server's ability to handle folders.
+t	Folder test
+h	Test
+p	This is a test of the server's ability to handle folders.
 
