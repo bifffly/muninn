@@ -1,0 +1,15 @@
+t	Table test
+h1	Table test
+p	This is a test of Odin's table display functionality.
+lsep
+tbl
+tblh	Column1	Column2	Column3
+tblr	Cell1	Cell2	Cell3
+tblr	Cell4	Cell5	Cell6
+tblr	Cell7	Cell8	Cell9
+untbl
+:q
+:q
+clear
+:q
+

@@ -1,5 +1,5 @@
-t	Home
-h1	This is a test homepage
+t	Odin Test
+h1	This is a test first-level header
 h2	This is a test second-level header
 h3	This is a test third-level header
 p	This is a test plain line.
@@ -12,5 +12,6 @@ it	First enumerated item
 it	Second enumerated item
 unel
 p	Example links:
-r	List test file	list.odinml	odin.odin-project.com
-r	Folder child test file	folder/test.odinml	odin.odin-project.com
+r	List test	odin://localhost/list.odinml
+r	Table test	odin://localhost/table.odinml
+r	Folder test	odin://localhost/folder/test.odinml

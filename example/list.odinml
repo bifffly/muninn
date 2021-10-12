@@ -1,17 +1,16 @@
 t	List test
-h1	This is a test of Odin's list functionality.
-lbr
+h1	List test
+p	This is a test of Odin's list functionality.
+lsep
+p	Enumerated list:
 bl
 it	Bullet 1
 it	Bullet 2
 it	Bullet 3
 unbl
-p	List off.
-lbr
+p	Bulleted list:
 el
 it	Item 1
 it	Item 2
 it	Item 3
 unel
-p	List off.
-
