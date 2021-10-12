@@ -5,13 +5,15 @@ h3	This is a test third-level header
 p	This is a test plain line.
 bl
 it	First bullet point
-it	Second buillet point
+it	Second bullet point
 unbl
 el
 it	First enumerated item
 it	Second enumerated item
 unel
 p	Example links:
-r	List test	odin://localhost/list.odinml
-r	Table test	odin://localhost/table.odinml
-r	Folder test	odin://localhost/folder/test.odinml
+r	List test	localhost/list.odinml
+r	Table test	localhost/table.odinml
+r	Folder test	localhost/folder/test.odinml
+lsep
+r	Go Home	localhost/home.odinml

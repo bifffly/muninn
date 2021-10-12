@@ -8,8 +8,5 @@ tblr	Cell1	Cell2	Cell3
 tblr	Cell4	Cell5	Cell6
 tblr	Cell7	Cell8	Cell9
 untbl
-:q
-:q
-clear
-:q
-
+lsep
+r	Go Home	localhost/home.odinml
