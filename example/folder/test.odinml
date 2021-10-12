@@ -2,4 +2,5 @@ t	Folder test
 h1	Folder test
 p	This is a test of the server's ability to handle folders.
 lsep
+r	Test Home	localhost/test.odinml
 r	Go Home	localhost/home.odinml

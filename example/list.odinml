@@ -1,7 +1,6 @@
 t	List test
 h1	List test
 p	This is a test of Odin's list functionality.
-lsep
 p	Enumerated list:
 bl
 it	Bullet 1
@@ -15,4 +14,5 @@ it	Item 2
 it	Item 3
 unel
 lsep
+r	Test Home	localhost/test.odinml
 r	Go Home	localhost/home.odinml
